@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathologist Link Manager</title>
+  <link rel="icon" type="image/png" href="/favico.png">
+  <link rel="stylesheet" href="/pathologist.css">
+</head>
+<body style="background:#e0e0e0;">
+  <div class="path-admin-wrap">
+    <div class="path-admin-header">
+      <h1>Pathologist Link Manager</h1>
+      <div>
+        <a href="/pathologist" class="btn btn-dark-red">View Pathologist Site</a>
+        <a href="/admin" class="btn btn-dark-red">View Apps Site</a>
+        <a href="/pathologist/admin/logout" class="btn btn-dark-red">Logout</a>
+      </div>
+    </div>
+
+    <!-- News Feed Footer Links -->
+    <div class="path-card">
+      <h2>News Feed Footer Links</h2>
+      <div class="admin-link-item">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <img src="/logo-cap-xs.jpg" style="height:18px;">
+          <strong><%= footerLinks.cap.title %></strong>
+          <span style="font-size:0.75rem; color:#888;"><%= footerLinks.cap.url %></span>
+        </div>
+        <button class="btn btn-small btn-white" onclick="toggleFooterEdit('cap')">Edit</button>
+        <form method="POST" action="/pathologist/admin/links/<%= footerLinks.cap.id %>" class="edit-form" id="pedit-cap" style="display:none">
+          <div class="form-row">
+            <div class="form-group"><label>Title</label><input type="text" name="title" value="<%= footerLinks.cap.title %>" required></div>
+            <div class="form-group"><label>URL</label><input type="url" name="url" value="<%= footerLinks.cap.url %>" required></div>
+            <input type="hidden" name="section" value="news_cap">
+            <input type="hidden" name="sort_order" value="<%= footerLinks.cap.sort_order %>">
+          </div>
+          <button type="submit" class="btn btn-dark-red btn-small">Save</button>
+          <button type="button" class="btn btn-secondary btn-small" onclick="toggleFooterEdit('cap')">Cancel</button>
+        </form>
+      </div>
+      <div class="admin-link-item">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <img src="/ajsp-logo.png" style="height:18px;">
+          <strong><%= footerLinks.ajsp.title %></strong>
+          <span style="font-size:0.75rem; color:#888;"><%= footerLinks.ajsp.url %></span>
+        </div>
+        <button class="btn btn-small btn-white" onclick="toggleFooterEdit('ajsp')">Edit</button>
+        <form method="POST" action="/pathologist/admin/links/<%= footerLinks.ajsp.id %>" class="edit-form" id="pedit-ajsp" style="display:none">
+          <div class="form-row">
+            <div class="form-group"><label>Title</label><input type="text" name="title" value="<%= footerLinks.ajsp.title %>" required></div>
+            <div class="form-group"><label>URL</label><input type="url" name="url" value="<%= footerLinks.ajsp.url %>" required></div>
+            <input type="hidden" name="section" value="news_ajsp">
+            <input type="hidden" name="sort_order" value="<%= footerLinks.ajsp.sort_order %>">
+          </div>
+          <button type="submit" class="btn btn-dark-red btn-small">Save</button>
+          <button type="button" class="btn btn-secondary btn-small" onclick="toggleFooterEdit('ajsp')">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Sections management -->
+    <div class="path-card">
+      <h2>Sections</h2>
+      <% sections.forEach(sec => { %>
+        <div class="admin-link-item" id="psec-<%= sec.id %>">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <% if (sec.icon) { %><img src="<%= sec.icon %>" style="height:16px;"><% } %>
+            <strong><%= sec.label %></strong>
+            <span style="font-size:0.72rem; color:#888;">key: <%= sec.key %></span>
+            <% if (sec.has_icd_search) { %><span class="section-badge">ICD Search</span><% } %>
+            <span style="font-size:0.72rem; color:#888;">Order: <%= sec.sort_order %></span>
+          </div>
+          <div class="link-actions">
+            <button class="btn btn-small btn-white" onclick="toggleSectionEdit(<%= sec.id %>)">Edit</button>
+            <form method="POST" action="/pathologist/admin/sections/<%= sec.id %>/delete" style="display:inline" onsubmit="return confirm('Delete section and all its links?')">
+              <button type="submit" class="btn btn-small btn-danger">Delete</button>
+            </form>
+          </div>
+          <form method="POST" action="/pathologist/admin/sections/<%= sec.id %>" class="edit-form" id="psedit-<%= sec.id %>" style="display:none">
+            <div class="form-row">
+              <div class="form-group"><label>Key (slug)</label><input type="text" name="key" value="<%= sec.key %>" required></div>
+              <div class="form-group"><label>Label</label><input type="text" name="label" value="<%= sec.label %>" required></div>
+              <div class="form-group"><label>Icon path</label><input type="text" name="icon" value="<%= sec.icon %>" placeholder="/logo.png"></div>
+              <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= sec.sort_order %>"></div>
+            </div>
+            <div class="form-group" style="flex-direction:row; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+              <input type="checkbox" name="has_icd_search" id="icd_<%= sec.id %>" value="1" <%= sec.has_icd_search ? 'checked' : '' %>>
+              <label for="icd_<%= sec.id %>" style="font-size:0.85rem; color:#333;">Enable ICD 10 search bar</label>
+            </div>
+            <button type="submit" class="btn btn-dark-red btn-small">Save</button>
+            <button type="button" class="btn btn-secondary btn-small" onclick="toggleSectionEdit(<%= sec.id %>)">Cancel</button>
+          </form>
+        </div>
+      <% }) %>
+
+      <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid #e0e0e0;">
+        <strong style="font-size:0.9rem;">Add New Section</strong>
+        <form method="POST" action="/pathologist/admin/sections" style="margin-top:0.5rem;">
+          <div class="form-row">
+            <div class="form-group"><label>Key (slug)</label><input type="text" name="key" required placeholder="my_section"></div>
+            <div class="form-group"><label>Label</label><input type="text" name="label" required placeholder="My Section"></div>
+            <div class="form-group"><label>Icon path</label><input type="text" name="icon" placeholder="/logo.png"></div>
+            <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="0"></div>
+          </div>
+          <div class="form-group" style="flex-direction:row; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+            <input type="checkbox" name="has_icd_search" id="new_icd" value="1">
+            <label for="new_icd" style="font-size:0.85rem; color:#333;">Enable ICD 10 search bar</label>
+          </div>
+          <button type="submit" class="btn btn-dark-red">Add Section</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add new link -->
+    <div class="path-card">
+      <h2>Add New Link</h2>
+      <form method="POST" action="/pathologist/admin/links">
+        <div class="form-row">
+          <div class="form-group"><label>Title</label><input type="text" name="title" required placeholder="Link text"></div>
+          <div class="form-group"><label>URL</label><input type="url" name="url" required placeholder="https://..."></div>
+          <div class="form-group">
+            <label>Section</label>
+            <select name="section" required>
+              <% sections.forEach(sec => { %>
+                <option value="<%= sec.key %>"><%= sec.label %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="0"></div>
+        </div>
+        <button type="submit" class="btn btn-dark-red">Add Link</button>
+      </form>
+    </div>
+
+    <!-- Links grouped by section -->
+    <% sections.forEach(sec => { %>
+      <% const secLinks = links.filter(l => l.section === sec.key); %>
+      <div class="path-card">
+        <h2>
+          <% if (sec.icon) { %><img src="<%= sec.icon %>" style="height:16px; vertical-align:middle; margin-right:6px;"><% } %>
+          <%= sec.label %> (<%= secLinks.length %>)
+        </h2>
+        <% if (secLinks.length === 0) { %>
+          <p style="color:#aaa; font-size:0.9rem;">No links yet.</p>
+        <% } %>
+        <% secLinks.forEach(link => { %>
+          <div class="admin-link-item" id="plink-<%= link.id %>">
+            <div>
+              <strong><%= link.title %></strong>
+              <span style="font-size:0.75rem; color:#888; margin-left:0.4rem;">Order: <%= link.sort_order %></span>
+              <div style="font-size:0.8rem; color:#888; word-break:break-all;"><%= link.url %></div>
+            </div>
+            <div class="link-actions">
+              <button class="btn btn-small btn-white" onclick="toggleEdit(<%= link.id %>)">Edit</button>
+              <form method="POST" action="/pathologist/admin/links/<%= link.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this link?')">
+                <button type="submit" class="btn btn-small btn-danger">Delete</button>
+              </form>
+            </div>
+            <form method="POST" action="/pathologist/admin/links/<%= link.id %>" class="edit-form" id="pedit-<%= link.id %>" style="display:none">
+              <div class="form-row">
+                <div class="form-group"><label>Title</label><input type="text" name="title" value="<%= link.title %>" required></div>
+                <div class="form-group"><label>URL</label><input type="url" name="url" value="<%= link.url %>" required></div>
+                <div class="form-group">
+                  <label>Section</label>
+                  <select name="section">
+                    <% sections.forEach(s => { %>
+                      <option value="<%= s.key %>" <%= link.section === s.key ? 'selected' : '' %>><%= s.label %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <div class="form-group"><label>Sort Order</label><input type="number" name="sort_order" value="<%= link.sort_order %>"></div>
+              </div>
+              <button type="submit" class="btn btn-dark-red btn-small">Save</button>
+              <button type="button" class="btn btn-secondary btn-small" onclick="toggleEdit(<%= link.id %>)">Cancel</button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+    <% }) %>
+  </div>
+
+  <script>
+    function toggleEdit(id) { const f = document.getElementById('pedit-'+id); f.style.display = f.style.display==='none'?'block':'none'; }
+    function toggleFooterEdit(k) { const f = document.getElementById('pedit-'+k); f.style.display = f.style.display==='none'?'block':'none'; }
+    function toggleSectionEdit(id) { const f = document.getElementById('psedit-'+id); f.style.display = f.style.display==='none'?'block':'none'; }
+  </script>
+</body>
+</html>

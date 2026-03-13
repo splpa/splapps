@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - LinkPage</title>
+  <link rel="icon" type="image/png" href="/favico.png">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <div class="container admin-container">
+    <header class="admin-header">
+      <h1>Apps Link Manager</h1>
+      <div>
+        <a href="/" class="btn btn-dark-red">View Apps Site</a>
+        <a href="/pathologist/admin" class="btn btn-dark-red">View Pathologist Site</a>
+        <a href="/admin/logout" class="btn btn-dark-red">Logout</a>
+      </div>
+    </header>
+
+    <!-- Add new link form -->
+    <section class="card">
+      <h2>Add New Link</h2>
+      <form method="POST" action="/admin/links" enctype="multipart/form-data" class="link-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="url">URL</label>
+            <input type="url" id="url" name="url" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="icon">Icon (FA class or emoji)</label>
+            <input type="text" id="icon" name="icon" placeholder="fas fa-link or emoji">
+          </div>
+          <div class="form-group">
+            <label for="sort_order">Sort Order</label>
+            <input type="number" id="sort_order" name="sort_order" value="0">
+          </div>
+          <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" id="image" name="image" accept="image/*">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-dark-red">Add Link</button>
+      </form>
+    </section>
+
+    <!-- Links list -->
+    <section class="card">
+      <h2>Links (<%= links.length %>)</h2>
+      <% if (links.length === 0) { %>
+        <p class="empty">No links yet. Add one above.</p>
+      <% } %>
+      <div class="admin-links">
+        <% links.forEach(link => { %>
+          <div class="admin-link-item" id="link-<%= link.id %>">
+            <div class="link-preview">
+              <% if (link.image) { %>
+                <img src="<%= link.image %>" alt="" class="thumb">
+              <% } %>
+              <div>
+                <strong>
+                  <% if (link.icon) { %>
+                    <% if (link.icon.startsWith('fa')) { %>
+                      <i class="<%= link.icon %>"></i>
+                    <% } else { %>
+                      <%= link.icon %>
+                    <% } %>
+                  <% } %>
+                  <%= link.title %>
+                </strong>
+                <div class="link-url"><%= link.url %></div>
+                <small>Order: <%= link.sort_order %></small>
+              </div>
+            </div>
+            <div class="link-actions">
+              <button class="btn btn-small btn-white" onclick="toggleEdit(<%= link.id %>)">Edit</button>
+              <% if (link.image) { %>
+                <form method="POST" action="/admin/links/<%= link.id %>/remove-image" style="display:inline" onsubmit="return confirm('Remove this image?')">
+                  <button type="submit" class="btn btn-small btn-secondary">Remove Image</button>
+                </form>
+              <% } %>
+              <form method="POST" action="/admin/links/<%= link.id %>/delete" style="display:inline" onsubmit="return confirm('Delete this link?')">
+                <button type="submit" class="btn btn-small btn-danger">Delete</button>
+              </form>
+            </div>
+            <!-- Inline edit form (hidden by default) -->
+            <form method="POST" action="/admin/links/<%= link.id %>" enctype="multipart/form-data" class="edit-form" id="edit-<%= link.id %>" style="display:none">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Title</label>
+                  <input type="text" name="title" value="<%= link.title %>" required>
+                </div>
+                <div class="form-group">
+                  <label>URL</label>
+                  <input type="url" name="url" value="<%= link.url %>" required>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Icon</label>
+                  <input type="text" name="icon" value="<%= link.icon %>">
+                </div>
+                <div class="form-group">
+                  <label>Sort Order</label>
+                  <input type="number" name="sort_order" value="<%= link.sort_order %>">
+                </div>
+                <div class="form-group">
+                  <label>Image</label>
+                  <input type="file" name="image" accept="image/*">
+                  <% if (link.image) { %><small>Current: <%= link.image %></small><% } %>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-small">Save</button>
+              <button type="button" class="btn btn-secondary btn-small" onclick="toggleEdit(<%= link.id %>)">Cancel</button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function toggleEdit(id) {
+      const form = document.getElementById('edit-' + id);
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
+</body>
+</html>

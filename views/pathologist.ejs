@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathologists</title>
+  <link rel="icon" type="image/png" href="/favico.png">
+  <link rel="stylesheet" href="/pathologist.css">
+</head>
+<body>
+  <a href="/pathologist/admin/login" class="admin-corner">Admin</a>
+
+  <div class="page-layout">
+    <!-- Left column: dynamic sections -->
+    <div class="left-col">
+      <% sectionData.forEach(sec => { %>
+        <div class="panel">
+          <h2>
+            <% if (sec.icon) { %><img src="<%= sec.icon %>" style="height:28px; vertical-align:middle; margin-right:8px;"><% } %>
+            <%= sec.label %>
+          </h2>
+          <% if (sec.has_icd_search) { %>
+            <form class="icd-search-form" onsubmit="searchICD(event)">
+              <div style="display:flex; gap:0.5rem;">
+                <input type="text" class="search-bar" id="icdSearch" placeholder="Search ICD Data..." style="margin-bottom:0; flex:1;">
+                <button type="submit" class="icd-search-btn">Search</button>
+              </div>
+            </form>
+          <% } %>
+          <table class="link-table" style="<%= sec.has_icd_search ? 'margin-top:0.75rem;' : '' %>">
+            <tbody>
+              <% if (sec.links.length === 0) { %>
+                <tr><td><em style="color:#aaa; font-size:0.85rem;">No links yet.</em></td></tr>
+              <% } %>
+              <% sec.links.forEach(link => { %>
+                <tr><td><a href="<%= link.url %>" target="_blank" rel="noopener noreferrer"><%= link.title %></a></td></tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Right column: News Feed -->
+    <div class="panel news-feed">
+      <h2><a href="<%= news_ajsp.url %>" target="_blank" rel="noopener noreferrer" class="feed-panel-title"><img src="/newspaper.png" style="height:20px; vertical-align:middle; margin-right:6px;">PubMed — Am. J. Surgical Pathology</a></h2>
+      <div class="feed-list">
+        <% if (!feedItems || feedItems.length === 0) { %>
+          <p class="feed-empty">No articles available at this time.</p>
+        <% } %>
+        <% (feedItems || []).forEach(item => { %>
+          <a href="<%= item.link %>" target="_blank" rel="noopener noreferrer" class="feed-item">
+            <div class="feed-item-title"><%= item.title %></div>
+            <div class="feed-item-meta">
+              <% if (item.authors) { %><span><%= item.authors %></span><% } %>
+              <% if (item.pubdate) { %><span><%= item.pubdate %></span><% } %>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+      <div class="news-feed-footer">
+        <a href="<%= news_cap.url %>" target="_blank" rel="noopener noreferrer" class="news-footer-link">
+          <img src="/logo-cap-xs.jpg" style="height:22px; vertical-align:middle; margin-right:6px;">
+          <span class="news-footer-title"><%= news_cap.title %></span>
+          <span class="news-footer-sub">CURRENT ISSUE</span>
+        </a>
+        <a href="<%= news_ajsp.url %>" target="_blank" rel="noopener noreferrer" class="news-footer-link">
+          <img src="/ajsp-logo.png" style="height:22px; vertical-align:middle; margin-right:6px;">
+          <span class="news-footer-title"><%= news_ajsp.title %></span>
+          <span class="news-footer-sub">CURRENT ISSUE</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function searchICD(e) {
+      e.preventDefault();
+      const code = document.getElementById('icdSearch').value.trim();
+      if (!code) return;
+      window.open('https://www.icd10data.com/search?s=' + encodeURIComponent(code), '_blank');
+    }
+  </script>
+</body>
+</html>

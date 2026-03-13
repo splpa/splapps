@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPLAPPS</title>
+  <link rel="icon" type="image/png" href="/favico.png">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <a href="/admin" class="admin-link">Admin</a>
+  <div class="container">
+    <header>
+      <img src="/logo-white.png" alt="SPLAPPS" style="max-width: 220px; height: auto;">
+    </header>
+    <main class="links-grid">
+      <% if (links.length === 0) { %>
+        <p class="empty">No links yet.</p>
+      <% } %>
+      <% links.forEach(link => { %>
+        <a href="<%= link.url %>" class="link-card" target="_blank" rel="noopener noreferrer">
+          <% if (link.image) { %>
+            <div class="link-image">
+              <img src="<%= link.image %>" alt="<%= link.title %>">
+            </div>
+          <% } %>
+          <div class="link-info">
+            <% if (link.icon) { %>
+              <span class="link-icon">
+                <% if (link.icon.startsWith('fa')) { %>
+                  <i class="<%= link.icon %>"></i>
+                <% } else { %>
+                  <%= link.icon %>
+                <% } %>
+              </span>
+            <% } %>
+            <span class="link-title"><%= link.title %></span>
+          </div>
+        </a>
+      <% }) %>
+    </main>
+  </div>
+</body>
+</html>

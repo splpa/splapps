@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathologist Admin Login</title>
+  <link rel="icon" type="image/png" href="/favico.png">
+  <link rel="stylesheet" href="/pathologist.css">
+</head>
+<body style="background:#e0e0e0;">
+  <div class="path-login-wrap">
+    <h2>Admin Login</h2>
+    <% if (error) { %>
+      <div class="alert error"><%= error %></div>
+    <% } %>
+    <form method="POST" action="/pathologist/admin/login">
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required autofocus>
+      </div>
+      <div style="display:flex; gap:0.75rem; margin-top:0.25rem;">
+        <button type="submit" class="btn btn-dark-red" style="flex:1;">Login</button>
+        <a href="/pathologist" class="btn btn-dark-red" style="flex:1; text-align:center;">Go Back</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
