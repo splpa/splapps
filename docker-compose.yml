@@ -1,8 +1,9 @@
 services:
   linkpage:
     build: .
+    env_file: ./data/.env
     ports:
-      - "127.0.0.1:${HOST_PORT:-3100}:${PORT:-3000}"
+      - "127.0.0.1:${HOST_PORT:-3100}:${PORT:-3100}"
     volumes:
       - ./data:/app/data
       - ./public/uploads:/app/public/uploads
