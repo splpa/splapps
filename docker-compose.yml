@@ -2,11 +2,9 @@ services:
   linkpage:
     build: .
     ports:
-      - "3000:3000"
-    environment:
-      - ADMIN_PASSWORD=changeme
-      - SESSION_SECRET=super-secret-change-me
+      - "127.0.0.1:${HOST_PORT:-3100}:${PORT:-3000}"
     volumes:
       - ./data:/app/data
       - ./public/uploads:/app/public/uploads
+      - ./.env:/app/.env
     restart: unless-stopped
