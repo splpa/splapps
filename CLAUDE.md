@@ -39,7 +39,7 @@ Two parallel web applications sharing one Express server and admin authenticatio
 | `server.js` | Express app, all routes and business logic |
 | `db.js` | SQLite initialization, schema, CRUD functions |
 | `entrypoint.sh` | Docker entrypoint, generates .env with secure defaults |
-| `deploy_nginx.sh` | Nginx deployment, substitutes HOST_PORT from .env |
+| `deploy_nginx.sh` | Nginx deployment, substitutes HOST_PORT from data/.env |
 
 ### Database Schema (SQLite)
 
@@ -56,7 +56,7 @@ path_sections (id, key, label, icon, has_icd_search, sort_order)
 
 ### Environment Variables
 
-Auto-generated in `.env` on first Docker start:
+Auto-generated in `data/.env` on first Docker start:
 - `PORT` / `HOST_PORT` - Container/host ports (3000/3100)
 - `ADMIN_PASSWORD` - Format: `ChangeMe` + 12 hex chars
 - `SESSION_SECRET` - 64-char random hex

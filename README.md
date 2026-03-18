@@ -22,13 +22,13 @@ cd splapps
 docker compose up -d
 ```
 
-On first run, a `.env` file is automatically created with secure random credentials.
+On first run, a `data/.env` file is automatically created with secure random credentials.
 
 Access the application at `http://localhost:3100`
 
 ## Configuration
 
-Configuration is stored in `.env` (auto-generated on first start):
+Configuration is stored in `data/.env` (auto-generated on first start):
 
 | Variable | Description | Default |
 |----------|-------------|---------|
@@ -39,7 +39,7 @@ Configuration is stored in `.env` (auto-generated on first start):
 
 ### Changing Ports
 
-After modifying `HOST_PORT` in `.env`:
+After modifying `HOST_PORT` in `data/.env`:
 
 ```bash
 docker compose down && docker compose up -d
@@ -78,7 +78,7 @@ Features:
 For production deployment behind nginx with SSL:
 
 ```bash
-# Deploy nginx configuration (reads port from .env)
+# Deploy nginx configuration (reads port from data/.env)
 sudo ./deploy_nginx.sh
 
 # Test and reload
@@ -105,9 +105,8 @@ docker compose up -d --build # Rebuild after code changes
 ## Data Persistence
 
 Data is stored in mounted volumes:
-- `./data/` - SQLite database
+- `./data/` - SQLite database and environment configuration (`data/.env`)
 - `./public/uploads/` - Uploaded images
-- `./.env` - Environment configuration
 
 ## Tech Stack
 

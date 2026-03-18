@@ -4,7 +4,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NGINX_DIR="/etc/nginx"
-ENV_FILE="${SCRIPT_DIR}/.env"
+ENV_FILE="${SCRIPT_DIR}/data/.env"
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then

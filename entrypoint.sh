@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ENV_FILE="/app/.env"
+ENV_FILE="/app/data/.env"
 
 if [ ! -f "$ENV_FILE" ]; then
   echo "Generating .env file with secure defaults..."

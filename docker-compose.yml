@@ -6,5 +6,4 @@ services:
     volumes:
       - ./data:/app/data
       - ./public/uploads:/app/public/uploads
-      - ./.env:/app/.env
     restart: unless-stopped
